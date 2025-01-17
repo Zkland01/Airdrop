@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eye Future Airdrops</title>
+  <title> Airdrops</title>
   <link href="https://fonts.googleapis.com/css?family=Anonymous+Pro" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.4-rc.1/web3.min.js"></script>
@@ -86,6 +86,37 @@
       width: 100%;
       max-width: 300px;
       margin: 10px;
+      opacity: 0;  /* Start hidden */
+      transform: scale(0.8);  /* Start scaled down */
+      animation: zoomIn 0.5s forwards;
+    }
+
+    @keyframes zoomIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* Animation delay for each card */
+    .card:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+
+    .card:nth-child(2) {
+      animation-delay: 0.3s;
+    }
+
+    .card:nth-child(3) {
+      animation-delay: 0.5s;
+    }
+
+    .card:nth-child(4) {
+      animation-delay: 0.7s;
     }
 
     /* Join Button */
@@ -218,7 +249,7 @@
 </head>
 <body>
   <header class="navbar">
-    <div class="logo">👁️ Eye Future</div>
+    <div class="logo">AIRDROP </div>
     <nav>
       <a href="#">Docs</a>
       <a href="#">Predictions</a>
@@ -293,7 +324,6 @@
       container.innerHTML = airdrops
         .map(
           (airdrop, index) => `
-
           <div class="card">
             <header class="card-header">
               <h2>${airdrop.name}</h2>
