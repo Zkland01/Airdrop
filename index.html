@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> Airdrops</title>
+  <title>Airdrops</title>
   <link href="https://fonts.googleapis.com/css?family=Anonymous+Pro" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.4-rc.1/web3.min.js"></script>
@@ -88,9 +88,10 @@
       margin: 10px;
       opacity: 0;  /* Start hidden */
       transform: scale(0.8);  /* Start scaled down */
-      animation: zoomIn 0.5s forwards;
+      animation: zoomIn 0.5s forwards; /* Animation for new cards */
     }
 
+    /* Animation for each new card */
     @keyframes zoomIn {
       0% {
         opacity: 0;
@@ -102,21 +103,17 @@
       }
     }
 
-    /* Animation delay for each card */
-    .card:nth-child(1) {
-      animation-delay: 0.1s;
-    }
-
-    .card:nth-child(2) {
-      animation-delay: 0.3s;
-    }
-
-    .card:nth-child(3) {
-      animation-delay: 0.5s;
-    }
-
-    .card:nth-child(4) {
-      animation-delay: 0.7s;
+    /* Generating Airdrop Message */
+    .generating-message {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.2rem;
+      color: #22C55E;
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 10px;
+      border-radius: 5px;
     }
 
     /* Join Button */
@@ -198,6 +195,7 @@
       }
     }
 
+    #generating-message{display: none;}
     /* Responsive Styles */
     @media (max-width: 768px) {
       .navbar {
@@ -249,7 +247,7 @@
 </head>
 <body>
   <header class="navbar">
-    <div class="logo">AIRDROP </div>
+    <div class="logo">AIRDROP</div>
     <nav>
       <a href="#">Docs</a>
       <a href="#">Predictions</a>
@@ -266,6 +264,8 @@
       <!-- Airdrop cards will be populated here -->
     </div>
   </main>
+
+  <div class="generating-message" id="generating-message">Generating Airdrop 1 of 4</div>
 
   <!-- Task Modal -->
   <div id="task-modal" class="task-modal">
@@ -294,6 +294,7 @@
       const airdropContainer = document.getElementById("airdrop-container");
       const connectButton = document.getElementById("connect-button");
       const fetchModal = document.getElementById("fetch-modal");
+      const generatingMessage = document.getElementById("generating-message");
 
       if (window.ethereum) {
         try {
@@ -305,10 +306,12 @@
 
           placeholder.style.display = "none";
           fetchModal.style.display = "flex";
+          generatingMessage.style.display="none"
 
           setTimeout(() => {
             fetchModal.style.display = "none";
             airdropContainer.style.display = "flex";
+            generatingMessage.style.display="flex"
             populateAirdrops();
           }, 2000);
         } catch (error) {
@@ -321,22 +324,31 @@
 
     function populateAirdrops() {
       const container = document.getElementById("airdrop-container");
-      container.innerHTML = airdrops
-        .map(
-          (airdrop, index) => `
-          <div class="card">
-            <header class="card-header">
-              <h2>${airdrop.name}</h2>
-            </header>
-            <div class="card-body">
-              <p><strong>Value:</strong> ${airdrop.value}</p>
-              <p><strong>Action:</strong> ${airdrop.action}</p>
-              <button class="join-button" onclick="showTaskModal(${index})">Join</button>
+      let cardIndex = 0;
+
+      function showCard() {
+        if (cardIndex < airdrops.length) {
+          const airdrop = airdrops[cardIndex];
+          const cardHtml = `
+            <div class="card">
+              <header class="card-header">
+                <h2>${airdrop.name}</h2>
+              </header>
+              <div class="card-body">
+                <p><strong>Value:</strong> ${airdrop.value}</p>
+                <p><strong>Action:</strong> ${airdrop.action}</p>
+                <button class="join-button" onclick="showTaskModal(${cardIndex})">Join</button>
+              </div>
             </div>
-          </div>
-        `
-        )
-        .join("");
+          `;
+          container.innerHTML += cardHtml;
+          document.getElementById("generating-message").textContent = `Generating Airdrop ${cardIndex + 1} of ${airdrops.length}`;
+          cardIndex++;
+          setTimeout(showCard, 4000);  // Delay the display of the next card by 4 seconds
+        }
+      }
+
+      showCard();
     }
 
     function showTaskModal(index) {
