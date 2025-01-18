@@ -6,7 +6,7 @@
   <title>Airdrops</title>
   <link href="https://fonts.googleapis.com/css?family=Anonymous+Pro" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.4-rc.1/web3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.4/web3.min.js"></script>
   <style>
     /* General Styles */
     * {
@@ -86,12 +86,11 @@
       width: 100%;
       max-width: 300px;
       margin: 10px;
-      opacity: 0;  /* Start hidden */
-      transform: scale(0.8);  /* Start scaled down */
-      animation: zoomIn 0.5s forwards; /* Animation for new cards */
+      opacity: 0;
+      transform: scale(0.8);
+      animation: zoomIn 0.5s forwards;
     }
 
-    /* Animation for each new card */
     @keyframes zoomIn {
       0% {
         opacity: 0;
@@ -103,36 +102,17 @@
       }
     }
 
-    /* Generating Airdrop Message */
-    .generating-message {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 1.2rem;
-      color: #22C55E;
-      background-color: rgba(0, 0, 0, 0.8);
-      padding: 10px;
-      border-radius: 5px;
-    }
-
-    /* Join Button */
     .join-button {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
       margin-top: 2rem;
-      padding-top: 0.75rem;
-      padding-bottom: 0.75rem;
-      padding-left: 1.5rem;
-      padding-right: 1.5rem;
+      padding: 0.75rem 1.5rem;
       background-color: #22c55e33;
       border-radius: 0.5rem;
       color: rgb(34 197 94 / 1);
       box-shadow: 0 0 10px #00ff4633, inset 0 0 10px #00ff461a;
-      transition-property: all;
-      transition-timing-function: cubic-bezier(.4,0,.2,1);
-      transition-duration: .15s;
+      transition: all 0.15s cubic-bezier(.4, 0, .2, 1);
     }
 
     .join-button:hover {
@@ -140,8 +120,8 @@
       box-shadow: 0 0 10px #22C55E;
     }
 
-    /* Task Modal */
-    .task-modal, .fetch-modal {
+    /* Modal Styles */
+    .task-modal {
       position: fixed;
       top: 0;
       left: 0;
@@ -153,28 +133,47 @@
       background-color: rgba(0, 0, 0, 0.8);
     }
 
-    .task-modal-content, .fetch-modal-content {
+    .task-modal-content {
       background-color: #001a00;
       border: 3px solid #22C55E;
       padding: 20px;
       border-radius: 10px;
       text-align: center;
+      max-width: 500px;
+      width: 90%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
     }
 
     .task-modal-content .line-1 {
       font-family: 'Anonymous Pro', monospace;
       color: #22C55E;
       border-right: 2px solid #22C55E;
-      font-size: 1.8rem;
-      white-space: nowrap;
+      font-size: 1.5rem; /* Adjusted for mobile readability */
+      white-space: normal; /* Allow text to wrap */
       overflow: hidden;
-      width: 24em;
+      text-align: center;
+      width: 100%; /* Ensure it spans the full width */
+      padding: 0 10px; /* Add padding for spacing */
+      margin-bottom: 1rem; /* Space below the text */
     }
 
-    /* Typing Animations */
     .anim-typewriter {
       animation: typewriter 2s steps(44) 1s 1 normal both,
                  blinkTextCursor 500ms steps(44) infinite normal;
+    }
+
+    .radio-options {
+      display: flex;
+      gap: 10%;
+      flex-wrap: wrap;
+    }
+
+    .radio-options label {
+      display: flex;
+      align-items: center;
     }
 
     @keyframes typewriter {
@@ -182,7 +181,7 @@
         width: 0;
       }
       to {
-        width: 24em;
+        width: 100%;
       }
     }
 
@@ -195,12 +194,18 @@
       }
     }
 
-    #generating-message{display: none;}
-    /* Responsive Styles */
     @media (max-width: 768px) {
       .navbar {
         flex-direction: column;
         text-align: center;
+      }
+
+      .task-modal-content {
+        width: 90%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
       }
 
       .navbar nav {
@@ -213,6 +218,23 @@
         max-width: none;
       }
 
+      .task-modal-content .line-1 {
+        font-family: 'Anonymous Pro', monospace;
+        color: #22C55E;
+        border-right: 2px solid #22C55E;
+        font-size: 10px; /* Adjusted for mobile readability */
+        white-space: normal; /* Allow text to wrap */
+        overflow: hidden;
+        text-align: center;
+        width: 100%; /* Ensure it spans the full width */
+        padding: 0 10px; /* Add padding for spacing */
+        margin-bottom: 1rem; /* Space below the text */
+      }
+
+      .radio-options {
+        gap: 5%;
+      }
+
       .join-button {
         width: 100%;
         padding-left: 2rem;
@@ -220,28 +242,22 @@
       }
     }
 
-    @media (max-width: 480px) {
-      body {
-        padding: 10px;
-      }
+    .close-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #22c55e33;
+      border: none;
+      border-radius: 5px;
+      color: #22C55E;
+      cursor: pointer;
+      font-size: 16px;
+      transition: transform 0.3s, background-color 0.3s;
+    }
 
-      .navbar {
-        padding: 15px;
-      }
-
-      .card {
-        width: 100%;
-        margin-bottom: 15px;
-      }
-
-      .join-button {
-        padding: 1rem;
-      }
-
-      .task-modal-content .line-1 {
-        font-size: 1.4rem;
-        width: 18em;
-      }
+    .close-button:hover {
+      transform: scale(1.1);
+      background-color: #22C55E;
+      color: #000;
     }
   </style>
 </head>
@@ -249,35 +265,61 @@
   <header class="navbar">
     <div class="logo">AIRDROP</div>
     <nav>
-      <a href="#">Docs</a>
-      <a href="#">Predictions</a>
-      <a href="#" id="connect-button" class="btn-wallet" onclick="connect()">Connect Wallet</a>
+      <a href="#">incoming</a>
+      <a href="#" onclick="showDumperModal()">Dumper</a>
+      <p id="portfolio"> portfolio value</a>
+        <p id="create" onclick="showCreateModal()">Create your Airdrop portal</p>
+        <p  id="connect-button" class="btn-wallet" onclick="connect()">Connect Wallet</p>
     </nav>
   </header>
 
   <main class="main-content">
-    <div id="placeholder" class="placeholder">
-      Connect your wallet to see the list of airdrops.
-    </div>
-
-    <div id="airdrop-container" class="airdrop-container">
-      <!-- Airdrop cards will be populated here -->
-    </div>
+    <div id="placeholder" class="placeholder">Connect your wallet to begin farming</div>
+    <div id="airdrop-container" class="airdrop-container"></div>
   </main>
 
-  <div class="generating-message" id="generating-message">Generating Airdrop 1 of 4</div>
-
-  <!-- Task Modal -->
   <div id="task-modal" class="task-modal">
     <div class="task-modal-content">
-      <p class="line-1 anim-typewriter">Airdrop Task Completed!</p>
+      <p class="line-1 anim-typewriter"> FARMING.....</p>
     </div>
   </div>
 
-  <!-- Fetching Modal -->
-  <div id="fetch-modal" class="fetch-modal">
-    <div class="fetch-modal-content">
-      <p>Fetching Airdrop Details...</p>
+
+
+
+    <!-- Dumper Modal -->
+    <div id="dumper-modal" class="task-modal">
+      <div class="task-modal-content">
+        <p class="line-1">You don't have an airdrop available to dump.</p>
+        <button class="close-button" onclick="closeDumperModal()">Close</button>
+      </div>
+    </div>
+
+    <div id="create-modal" class="task-modal">
+      <div class="task-modal-content">
+        <p class="line-1">Still exploring space.</p>
+        <button class="close-button" onclick="closeCreateModal()">Close</button>
+      </div>
+    </div>
+
+  <div id="accounts-modal" class="task-modal">
+    <div class="task-modal-content">
+      <p class="line-1 anim-typewriter">Please select the number of accounts you wish to farm:</p>
+      <div id="radio-options" class="radio-options">
+        <label><input type="radio" name="accounts" value="5"> 5</label>
+        <label><input type="radio" name="accounts" value="10"> 10</label>
+        <label><input type="radio" name="accounts" value="20"> 20</label>
+        <label><input type="radio" name="accounts" value="50"> 50</label>
+      </div>
+      <button class="join-button" onclick="closeAccountsModal()">Confirm</button>
+    </div>
+  </div>
+
+  <div id="wallet-modal" class="task-modal">
+    <div class="task-modal-content">
+      <p class="typewriter-message" id="typewriter-message">Please keep the private keys safe!</p>
+      <div id="wallet-container" class="wallet-container"></div>
+      <button class="join-button" onclick="closeWalletModal()">Close</button>
     </div>
   </div>
 
@@ -293,27 +335,28 @@
       const placeholder = document.getElementById("placeholder");
       const airdropContainer = document.getElementById("airdrop-container");
       const connectButton = document.getElementById("connect-button");
-      const fetchModal = document.getElementById("fetch-modal");
-      const generatingMessage = document.getElementById("generating-message");
-
+      const portfolioValue=document.getElementById("portfolio")
       if (window.ethereum) {
         try {
           const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
           const walletAddress = accounts[0];
-
           connectButton.textContent = `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`;
+       // Get the balance in Wei
+       const web3 = new Web3(window.ethereum);
+      const balanceWei = await web3.eth.getBalance(walletAddress);
+      const balanceEther = web3.utils.fromWei(balanceWei, "ether");
+
+      // Format the balance to 2 decimal places and update the portfolio value
+      const formattedBalance = parseFloat(balanceEther).toFixed(6);
+      portfolioValue.textContent = `${formattedBalance} ETH`;
+
+alert(`Wallet: ${walletAddress}\nBalance: ${balanceEther} `);
+
           connectButton.style.pointerEvents = "none";
 
           placeholder.style.display = "none";
-          fetchModal.style.display = "flex";
-          generatingMessage.style.display="none"
-
-          setTimeout(() => {
-            fetchModal.style.display = "none";
-            airdropContainer.style.display = "flex";
-            generatingMessage.style.display="flex"
-            populateAirdrops();
-          }, 2000);
+          airdropContainer.style.display = "flex";
+          populateAirdrops();
         } catch (error) {
           console.error("User rejected the connection request:", error);
         }
@@ -324,40 +367,103 @@
 
     function populateAirdrops() {
       const container = document.getElementById("airdrop-container");
-      let cardIndex = 0;
-
-      function showCard() {
-        if (cardIndex < airdrops.length) {
-          const airdrop = airdrops[cardIndex];
-          const cardHtml = `
-            <div class="card">
-              <header class="card-header">
-                <h2>${airdrop.name}</h2>
-              </header>
-              <div class="card-body">
-                <p><strong>Value:</strong> ${airdrop.value}</p>
-                <p><strong>Action:</strong> ${airdrop.action}</p>
-                <button class="join-button" onclick="showTaskModal(${cardIndex})">Join</button>
-              </div>
+      airdrops.forEach(airdrop => {
+        const cardHtml = `
+          <div class="card">
+            <header class="card-header">
+              <h2>${airdrop.name}</h2>
+            </header>
+            <div class="card-body">
+              <p><strong>Value:</strong> ${airdrop.value}</p>
+              <p><strong>Action:</strong> ${airdrop.action}</p>
+              <button class="join-button" onclick="showTaskModal()">Join</button>
             </div>
-          `;
-          container.innerHTML += cardHtml;
-          document.getElementById("generating-message").textContent = `Generating Airdrop ${cardIndex + 1} of ${airdrops.length}`;
-          cardIndex++;
-          setTimeout(showCard, 4000);  // Delay the display of the next card by 4 seconds
-        }
-      }
-
-      showCard();
+          </div>
+        `;
+        container.innerHTML += cardHtml;
+      });
     }
 
-    function showTaskModal(index) {
+    function showTaskModal() {
       const taskModal = document.getElementById("task-modal");
       taskModal.style.display = "flex";
 
       setTimeout(() => {
         taskModal.style.display = "none";
+        showAccountsModal();
       }, 3000);
+    }
+
+    function showAccountsModal() {
+      const accountsModal = document.getElementById("accounts-modal");
+      accountsModal.style.display = "flex";
+    }
+
+    function closeAccountsModal() {
+      const accountsModal = document.getElementById("accounts-modal");
+      const selectedOption = document.querySelector('input[name="accounts"]:checked');
+      
+      if (selectedOption) {
+        alert(`You selected ${selectedOption.value} accounts!`);
+        accountsModal.style.display = "none";
+        generateWallets(selectedOption.value);
+      } else {
+        alert("Please select a number of accounts to continue.");
+      }
+    }
+
+    function generateWallets(count) {
+      const walletContainer = document.getElementById("wallet-container");
+      walletContainer.innerHTML = ""; // Clear previous wallets
+
+      let wallets = [];
+
+      for (let i = 0; i < count; i++) {
+        const wallet = generateSimulatedWallet();
+        wallets.push(wallet);
+        walletContainer.innerHTML += `
+          <p><strong>Wallet ${i + 1}:</strong> ${wallet}</p>
+        `;
+      }
+
+      showWalletModal();
+    }
+
+    function generateSimulatedWallet() {
+      const randomAddress = "0x" + Math.random().toString(16).slice(2, 42); // Simulated address
+      const privateKey = Math.random().toString(36).slice(2, 42); // Simulated private key
+      return `${randomAddress} (Private Key: ${privateKey})`;
+    }
+
+    function showWalletModal() {
+      const walletModal = document.getElementById("wallet-modal");
+      walletModal.style.display = "flex";
+    }
+
+    function closeWalletModal() {
+      const walletModal = document.getElementById("wallet-modal");
+      walletModal.style.display = "none";
+    }
+
+    
+    function showDumperModal() {
+      const dumperModal = document.getElementById("dumper-modal");
+      dumperModal.style.display = "flex";
+    }
+
+    function closeDumperModal() {
+      const dumperModal = document.getElementById("dumper-modal");
+      dumperModal.style.display = "none";
+    }
+    
+    function showCreateModal() {
+      const dumperModal = document.getElementById("create-modal");
+      dumperModal.style.display = "flex";
+    }
+
+    function closeCreateModal() {
+      const dumperModal = document.getElementById("c-modal");
+      dumperModal.style.display = "none";
     }
   </script>
 </body>

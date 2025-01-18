@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Airdrops</title>
+  <link href="https://fonts.googleapis.com/css?family=Anonymous+Pro" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.4/web3.min.js"></script>
+  <style>
+    /* General Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Anonymous Pro', sans-serif;
+      background-color: #000;
+      color: #22C55E;
+      padding: 20px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: inherit;
+    }
+
+    h1, h2 {
+      margin-bottom: 10px;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #000;
+      border: 1px solid #22c55e56;
+      border-radius: 0.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .navbar .logo {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .navbar nav {
+      display: flex;
+      gap: 20px;
+    }
+
+    .navbar .btn-wallet {
+      border: 1px solid #22C55E;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+
+    /* Modal Styles */
+    .task-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .task-modal-content {
+      background-color: #001a00;
+      border: 3px solid #22C55E;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .task-modal-content .line-1 {
+      font-family: 'Anonymous Pro', monospace;
+      color: #22C55E;
+      border-right: 2px solid #22C55E;
+      font-size: 1.5rem;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 0;
+      animation: typing 2s steps(44) 1s forwards, blinkTextCursor 500ms steps(44) infinite normal;
+    }
+
+    @keyframes typing {
+      from {
+        width: 0;
+      }
+      to {
+        width: 100%;
+      }
+    }
+
+    @keyframes blinkTextCursor {
+      from {
+        border-right-color: #22C55E;
+      }
+      to {
+        border-right-color: transparent;
+      }
+    }
+
+    .close-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #22c55e33;
+      border: none;
+      border-radius: 5px;
+      color: #22C55E;
+      cursor: pointer;
+      font-size: 16px;
+      transition: transform 0.3s, background-color 0.3s;
+    }
+
+    .close-button:hover {
+      transform: scale(1.1);
+      background-color: #22C55E;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">AIRDROP</div>
+    <nav>
+      <a href="#">Incoming</a>
+      <a href="#" onclick="showDumperModal()">Dumper</a>
+      <a href="#">Portfolio Value</a>
+      <a href="#" id="connect-button" class="btn-wallet" onclick="connect()">Connect Wallet</a>
+    </nav>
+  </header>
+
+  <main class="main-content">
+    <div id="placeholder" class="placeholder">Connect your wallet to begin farming</div>
+    <div id="airdrop-container" class="airdrop-container"></div>
+  </main>
+
+  <!-- Dumper Modal -->
+  <div id="dumper-modal" class="task-modal">
+    <div class="task-modal-content">
+      <p class="line-1">You don't have an airdrop available to dump.</p>
+      <button class="close-button" onclick="closeDumperModal()">Close</button>
+    </div>
+  </div>
+
+  <script>
+    async function connect() {
+      const placeholder = document.getElementById("placeholder");
+      const airdropContainer = document.getElementById("airdrop-container");
+      const connectButton = document.getElementById("connect-button");
+
+      if (window.ethereum) {
+        try {
+          const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+          const walletAddress = accounts[0];
+          connectButton.textContent = `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`;
+          connectButton.style.pointerEvents = "none";
+
+          placeholder.style.display = "none";
+          airdropContainer.style.display = "flex";
+        } catch (error) {
+          console.error("User rejected the connection request:", error);
+        }
+      } else {
+        alert("No wallet detected. Please install MetaMask or another Web3 wallet.");
+      }
+    }
+
+    function showDumperModal() {
+      const dumperModal = document.getElementById("dumper-modal");
+      dumperModal.style.display = "flex";
+    }
+
+    function closeDumperModal() {
+      const dumperModal = document.getElementById("dumper-modal");
+      dumperModal.style.display = "none";
+    }
+  </script>
+</body>
+</html>
+\
+
+
+
+if (window.ethereum) {
+    try {
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      const walletAddress = accounts[0];
+
+      // Get the balance in Wei
+      const web3 = new Web3(window.ethereum);
+      const balanceWei = await web3.eth.getBalance(walletAddress);
+      const balanceEther = web3.utils.fromWei(balanceWei, "ether");
+
+      // Fetch the current Ether price in USD
+      const etherPrice = await fetchEtherPrice();
+
+      // Calculate portfolio value in USD
+      const portfolioValueUSD = (balanceEther * etherPrice).toFixed(2);
+
+      // Display the portfolio value
+      alert(`Wallet: ${walletAddress}\nBalance: ${balanceEther} ETH\nValue: $${portfolioValueUSD}`);
+    } catch (error) {
+      console.error("Error fetching portfolio value:", error);
+    }
+  } else {
+    alert("No wallet detected. Please install MetaMask or another Web3 wallet.");
+  }
+}
+
+async function fetchEtherPrice() {
+  const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd");
+  const data = await response.json();
+  return data.ethereum.usd;
+}
