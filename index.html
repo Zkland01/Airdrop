@@ -63,6 +63,33 @@
     .main-content {
       margin: 20px 0;
     }
+    .wallet-container {
+  width: fit-content;
+  height: fit-content;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-wrap: break-word; /* Ensures long wallet addresses or private keys wrap onto the next line */
+}
+
+/* Styles for large screens (lg and above) */
+@media (min-width: 1024px) {
+  .wallet-container {
+    width: 100%; /* Make the container wider on large screens */
+    max-width: 1000px; /* You can adjust this value for maximum width */
+    padding: 20px;
+    font-size: 16px;
+  }
+}
+
+/* Styles for smaller screens (mobile) */
+@media (max-width: 767px) {
+  .wallet-container {
+    width: 90%; /* Make the container fit the screen width on mobile */
+    max-width: 100%; /* Ensures the container does not overflow */
+    padding: 10px;
+    font-size: 14px; /* Adjust font size for better readability */
+  }
+}
 
     .placeholder {
       text-align: center;
@@ -323,7 +350,7 @@
     </div>
   </div>
 
-  <script>
+  <script >
     const airdrops = [
       { name: "ZIZLE", value: "Exclusive NFT Rewards", action: "Collect unique digital assets during the event." },
       { name: "Euphoria", value: "High Potential Token", action: "Join the waitlist to secure early access to this DeFi platform." },
@@ -422,18 +449,25 @@ alert(`Wallet: ${walletAddress}\nBalance: ${balanceEther} `);
         const wallet = generateSimulatedWallet();
         wallets.push(wallet);
         walletContainer.innerHTML += `
-          <p><strong>Wallet ${i + 1}:</strong> ${wallet}</p>
+          <p><strong>Wallet ${i + 1}:</strong><br> ${wallet}</p>
         `;
       }
 
       showWalletModal();
     }
 
-    function generateSimulatedWallet() {
-      const randomAddress = "0x" + Math.random().toString(16).slice(2, 42); // Simulated address
-      const privateKey = Math.random().toString(36).slice(2, 42); // Simulated private key
-      return `${randomAddress} (Private Key: ${privateKey})`;
-    }
+   // Modified generateSimulatedWallet function using ethers.js
+  function generateSimulatedWallet() {
+      // Wait until the ethers.js script is loaded
+      const web3 = new Web3(Web3.givenProvider);
+        // Create a random wallet using ethers.js
+        const wallet= web3.eth.accounts.create();
+              // Log wallet address and private key
+ 
+
+// Return the wallet address and private key as a string
+    return `${wallet.address} (Private Key: ${wallet.privateKey})`;
+  }
 
     function showWalletModal() {
       const walletModal = document.getElementById("wallet-modal");
