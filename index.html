@@ -63,12 +63,14 @@
     .main-content {
       margin: 20px 0;
     }
+
     .wallet-container {
-  width: fit-content;
-  height: fit-content;
+  max-height: 300px; /* Limit height for scrollable content */
+  overflow-y: auto; /* Enable vertical scrolling */
   padding: 15px;
+  border: 1px solid #22C55E;
   border-radius: 5px;
-  overflow-wrap: break-word; /* Ensures long wallet addresses or private keys wrap onto the next line */
+  background-color: #001a00;
 }
 
 /* Styles for large screens (lg and above) */
@@ -220,7 +222,44 @@
         border-right-color: transparent;
       }
     }
+/* General button style */
+.navbar .btn-wallet {
+  border: 1px solid #22C55E;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: #22C55E;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: blink 1s infinite alternate;
+}
+.navbar .btns-wallet {
+  border: 1px solid #22C55E;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: #22C55E;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
+/* Hover effect for buttons */
+.navbar .btn-wallet:hover {
+  background-color: #22C55E;
+  color: #000;
+}
+
+/* Blinking animation */
+@keyframes blink {
+  0% {
+    box-shadow: 0 0 5px #22C55E, inset 0 0 5px #22C55E;
+    background-color: #000;
+  }
+  100% {
+    box-shadow: 0 0 20px #22C55E, inset 0 0 20px #22C55E;
+    background-color: #22C55E33;
+  }
+}
     @media (max-width: 768px) {
       .navbar {
         flex-direction: column;
@@ -291,13 +330,14 @@
 <body>
   <header class="navbar">
     <div class="logo">AIRDROP</div>
-    <nav>
-      <a href="#">incoming</a>
-      <a href="#" onclick="showDumperModal()">Dumper</a>
-      <p id="portfolio"> portfolio value</a>
-        <p id="create" onclick="showCreateModal()">Create your Airdrop portal</p>
-        <p  id="connect-button" class="btn-wallet" onclick="connect()">Connect Wallet</p>
-    </nav>
+<nav>
+  <p id="incoming" class="btn-wallet" onclick="showIncoming()">Incoming</p>
+  <p id="create" class="btn-wallet" onclick="showDumperModal()">Dumper</p>
+  <p id="portfolio" class="btn-wallet">Portfolio Value</p>
+  <p id="create" class="btn-wallet" onclick="showCreateModal()">Create Your Airdrop Portal</p>
+  <p id="connect-button" class="btns-wallet" onclick="connect()">Connect Wallet</p>
+</nav>
+
   </header>
 
   <main class="main-content">
@@ -317,7 +357,7 @@
     <!-- Dumper Modal -->
     <div id="dumper-modal" class="task-modal">
       <div class="task-modal-content">
-        <p class="line-1">You don't have an airdrop available to dump.</p>
+        <p class="line-1 anim-typewriter">You don't have an airdrop available to dump.</p>
         <button class="close-button" onclick="closeDumperModal()">Close</button>
       </div>
     </div>
@@ -345,10 +385,12 @@
   <div id="wallet-modal" class="task-modal">
     <div class="task-modal-content">
       <p class="typewriter-message" id="typewriter-message">Please keep the private keys safe!</p>
-      <div id="wallet-container" class="wallet-container"></div>
+      <button class="join-button" id="copy-button" onclick="copyWallets()">Copy All</button>
+      <div id="wallet-container" class="wallet-container" style="max-height: 300px; overflow-y: auto;"></div>
       <button class="join-button" onclick="closeWalletModal()">Close</button>
     </div>
   </div>
+  
 
   <script >
     const airdrops = [
@@ -455,6 +497,16 @@ alert(`Wallet: ${walletAddress}\nBalance: ${balanceEther} `);
 
       showWalletModal();
     }
+
+    function copyWallets() {
+  const walletContainer = document.getElementById("wallet-container");
+  const textToCopy = walletContainer.textContent.trim(); // Get all text inside the container
+  navigator.clipboard.writeText(textToCopy).then(() => {
+    alert("Wallet addresses and private keys copied to clipboard!");
+  }).catch(err => {
+    console.error("Failed to copy text: ", err);
+  });
+}
 
    // Modified generateSimulatedWallet function using ethers.js
   function generateSimulatedWallet() {
