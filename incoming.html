@@ -130,6 +130,19 @@
       width: 90%;
     }
 
+
+    
+/* Blinking animation */
+@keyframes blink {
+  0% {
+    box-shadow: 0 0 5px #22C55E, inset 0 0 5px #22C55E;
+    background-color: #000;
+  }
+  100% {
+    box-shadow: 0 0 20px #22C55E, inset 0 0 20px #22C55E;
+    background-color: #22C55E33;
+  }
+}
     .close-button {
       margin-top: 20px;
       padding: 10px 20px;
@@ -163,6 +176,10 @@
 <body>
   <header class="navbar">
     <div class="logo">Airdrop Portal</div>
+    <a href="./incoming.html" id="incoming" class="btn-wallet" onclick="showIncoming()">Incoming</a>
+    <p id="create" class="btn-wallet" onclick="showDumperModal()">Dumper</p>
+    <p id="portfolio" class="btn-wallet">Portfolio Value</p>
+    <p id="create" class="btn-wallet" onclick="showCreateModal()">Create Your Airdrop Portal</p>
     <p id="connectWallet" class="btn-wallet">Connect Wallet</p>
   </header>
   
