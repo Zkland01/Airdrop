@@ -141,6 +141,17 @@
       font-size: 16px;
       transition: transform 0.3s, background-color 0.3s;
     }
+   .btn-wallet{
+    border: 1px solid #22C55E;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: #22C55E;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: blink 1s infinite alternate;
+
+    }
 
     .close-button:hover {
       transform: scale(1.1);
@@ -152,7 +163,7 @@
 <body>
   <header class="navbar">
     <div class="logo">Airdrop Portal</div>
-    <button id="connectWallet" class="btn-wallet">Connect Wallet</button>
+    <p id="connectWallet" class="btn-wallet">Connect Wallet</p>
   </header>
   
   <main>
@@ -160,7 +171,10 @@
     <div id="airdropContainer" class="airdrop-container"></div>
   </main>
 
-
+  <div id="taskModal" class="task-modal">
+    <div id="modalContent" class="task-modal-content"></div>
+    <button id="closeModal" class="close-button">Close</button>
+  </div>
 
   <script src="https://cdn.ethers.io/lib/ethers-5.6.min.js"></script>
   <script>
