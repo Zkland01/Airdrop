@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Airdrop Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Anonymous+Pro&display=swap" rel="stylesheet">
+  <style>
+    /* General Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Anonymous Pro', sans-serif;
+      background-color: #000;
+      color: #22C55E;
+      padding: 20px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: inherit;
+    }
+
+    h1, h2 {
+      margin-bottom: 10px;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #000;
+      border: 1px solid #22c55e56;
+      border-radius: 0.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .navbar .logo {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .navbar nav {
+      display: flex;
+      gap: 20px;
+    }
+
+    .navbar .btn-wallet {
+      border: 1px solid #22C55E;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+
+    /* Airdrop Container */
+    .airdrop-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .card {
+      background-color: #001a00;
+      border: 1px solid #22c55e56;
+      border-radius: 10px;
+      padding: 20px;
+      width: 100%;
+      max-width: 300px;
+      margin: 10px;
+      opacity: 0;
+      transform: scale(0.8);
+      animation: zoomIn 0.5s forwards;
+    }
+
+    @keyframes zoomIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .join-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+      padding: 0.75rem 1.5rem;
+      background-color: #22c55e33;
+      border-radius: 0.5rem;
+      color: rgb(34 197 94 / 1);
+      box-shadow: 0 0 10px #00ff4633, inset 0 0 10px #00ff461a;
+      transition: all 0.15s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .join-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 10px #22C55E;
+    }
+
+    /* Modal Styles */
+    .task-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .task-modal-content {
+      background-color: #001a00;
+      border: 3px solid #22C55E;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .close-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #22c55e33;
+      border: none;
+      border-radius: 5px;
+      color: #22C55E;
+      cursor: pointer;
+      font-size: 16px;
+      transition: transform 0.3s, background-color 0.3s;
+    }
+
+    .close-button:hover {
+      transform: scale(1.1);
+      background-color: #22C55E;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">Airdrop Portal</div>
+    <button id="connectWallet" class="btn-wallet">Connect Wallet</button>
+  </header>
+  
+  <main>
+    <h1>Available Airdrops</h1>
+    <div id="airdropContainer" class="airdrop-container"></div>
+  </main>
+
+
+
+  <script src="https://cdn.ethers.io/lib/ethers-5.6.min.js"></script>
+  <script>
+    // Airdrop data
+    const airdrops = [
+      { name: 'Eclipse Airdrop', value: 'Use Eclipse Bridge', action: 'Explore ecosystem' },
+      { name: 'Berachain Airdrop', value: 'Participate in Testnet', action: 'Engage with Berachain' },
+      { name: 'LayerZero Airdrop', value: 'Token Transfers', action: 'DApp Interaction' },
+      { name: 'StarkNet Airdrop', value: '$1.8 Billion STRK', action: 'Qualify with Activity' },
+      { name: 'Midas Airdrop', value: 'Telegram Mini-App Points', action: 'Earn Points' },
+      { name: 'Kaito AI Airdrop', value: 'Significant Rewards', action: 'Q1 2025 Launch' }
+    ];
+
+    const walletButton = document.getElementById('connectWallet');
+    const airdropContainer = document.getElementById('airdropContainer');
+    const modal = document.getElementById('taskModal');
+    const modalContent = document.getElementById('modalContent');
+    const closeModal = document.getElementById('closeModal');
+
+    // Generate airdrop cards
+    function loadAirdrops() {
+      airdropContainer.innerHTML = '';
+      airdrops.forEach((airdrop, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <h2>${airdrop.name}</h2>
+          <p><strong>Value:</strong> ${airdrop.value}</p>
+          <p><strong>Action:</strong> ${airdrop.action}</p>
+        `;
+        airdropContainer.appendChild(card);
+      });
+    }
+
+    // Connect wallet
+    async function connectWallet() {
+      if (!window.ethereum) {
+        alert('MetaMask is not installed!');
+        return;
+      }
+
+      try {
+        const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+        walletButton.textContent = `Connected: ${accounts[0]}`;
+      } catch (err) {
+        alert('Could not connect wallet.');
+      }
+    }
+
+    // Show task modal
+    function showTaskModal(index) {
+      const airdrop = airdrops[index];
+      modalContent.innerHTML = `
+        <h2>${airdrop.name}</h2>
+        <p>Action Required: ${airdrop.action}</p>
+      `;
+      modal.style.display = 'flex';
+    }
+
+    closeModal.onclick = () => (modal.style.display = 'none');
+
+    walletButton.addEventListener('click', connectWallet);
+    loadAirdrops();
+  </script>
+</body>
+</html>
